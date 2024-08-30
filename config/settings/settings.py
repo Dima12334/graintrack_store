@@ -52,7 +52,7 @@ LOCAL_APPS = [
     "graintrack_store.users.apps.UsersConfig",
     "graintrack_store.core.apps.CoreConfig",
     "graintrack_store.products.apps.ProductsConfig",
-    "graintrack_store.sales.apps.SalesConfig",
+    "graintrack_store.orders.apps.OrdersConfig",
 ]
 
 DJANGO_APPS = [
