@@ -118,8 +118,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "graintrack_store.wsgi.application"
-
+WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 # Database
 DB_URL = env.db("DB_URL", "postgresql://user:passwrod@host:port/db")
