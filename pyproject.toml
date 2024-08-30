@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "graintrack_store"
+version = "0.1.0"
+description = "Graintack store."
+authors = []
+
+[tool.poetry.dependencies]
+virtualenv = "20.25.3"
+python = "^3.11"
+django = "^4.2"
+django-environ = "^0.8.1"
+djangorestframework = "^3.13.1"
+django-filter = "^21.1"
+uWSGI = "^2.0.25.1"
+django-cors-headers = "^3.11.0"
+django-model-utils = "^4.2.0"
+psycopg2 = "^2.9.3"
+psycopg2-binary = "^2.9.3"
+django-extensions = "^3.1.5"
+pydantic = "^1.9.1"
+requests = "^2.31.0"
+drf-yasg = "^1.20.0"
+django-debug-toolbar = "^3.7.0"
