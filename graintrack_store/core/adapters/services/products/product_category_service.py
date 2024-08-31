@@ -26,7 +26,7 @@ class ProductCategoryService(BaseService):
     def create_product_category(
         self,
         name: str,
-        description: str,
+        description: str = "",
         parent_category_uuid: Optional[UUID] = None,
     ) -> ProductCategory:
         with transaction.atomic():

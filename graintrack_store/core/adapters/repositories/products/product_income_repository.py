@@ -5,6 +5,9 @@ from graintrack_store.products.models import ProductIncome
 class ProductIncomeRepository(BaseRepository):
     model = ProductIncome
 
+    def get_base_qs(self):
+        return ProductIncome.objects.select_related("product").all()
+
     def create(
         self,
         product_id: int,

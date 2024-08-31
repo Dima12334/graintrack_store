@@ -11,13 +11,16 @@ class OrderRepository(BaseRepository):
     model = Order
     filterset = OrderFilterSet
 
+    def get_base_qs(self):
+        return Order.objects.select_related("creator").all()
+
     def create(
         self,
         creator_id: int,
         status: str,
         order_code: str,
-        comment: str,
         total_sum: Decimal,
+        comment: str = "",
     ) -> Order:
         data = {
             "creator_id": creator_id,
@@ -49,3 +52,6 @@ class OrderRepository(BaseRepository):
 
         instance.save()
         return instance
+
+    def check_existence_by_order_code(self, order_code: str) -> bool:
+        return Order.objects.filter(order_code=order_code).exists()

@@ -22,13 +22,17 @@ class ProductValidator:
         category_uuid: UUID,
         name: str,
         price: Decimal,
-        description: str,
+        description: str = "",
+        is_deleted: bool = False,
+        available_quantity: int = 0
     ) -> ProductCreateOutSchema:
         data = {
             "category_uuid": category_uuid,
             "name": name,
             "price": price,
             "description": description,
+            "is_deleted": is_deleted,
+            "available_quantity": available_quantity
         }
         schema = ProductCreateInSchema(**data)
 

@@ -12,7 +12,7 @@ class ProductCategoryRepository(BaseRepository):
     def create(
         self,
         name: str,
-        description: str,
+        description: str = "",
         parent_category_id: Optional[int] = None,
     ) -> ProductCategory:
         data = {

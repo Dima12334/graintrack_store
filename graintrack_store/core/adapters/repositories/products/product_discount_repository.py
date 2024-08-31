@@ -14,13 +14,16 @@ class ProductDiscountRepository(BaseRepository):
     model = ProductDiscount
     filterset = ProductDiscountFilterSet
 
+    def get_base_qs(self):
+        return ProductDiscount.objects.select_related("product").all()
+
     def create(
         self,
         product_id: int,
         discount_started_at: datetime,
         discount_ended_at: datetime,
         discount_percentage: Decimal,
-        is_active: bool,
+        is_active: bool = True,
     ) -> ProductDiscount:
         data = {
             "product_id": product_id,

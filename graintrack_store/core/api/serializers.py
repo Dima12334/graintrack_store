@@ -2,10 +2,6 @@ from rest_framework.serializers import ModelSerializer
 
 
 class BaseProjectModelSerializer(ModelSerializer):
-    """
-    Serializer should not create or update objects, as
-    these actions have to be performed at the service layer.
-    """
 
     def create(self, validated_data):
         raise NotImplementedError(

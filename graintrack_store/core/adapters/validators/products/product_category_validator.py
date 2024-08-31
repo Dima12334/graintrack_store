@@ -20,7 +20,7 @@ class ProductCategoryValidator:
     def validate_create(
         self,
         name: str,
-        description: str,
+        description: str = "",
         parent_category_uuid: Optional[UUID] = None,
     ) -> ProductCategoryCreateOutSchema:
         data = {

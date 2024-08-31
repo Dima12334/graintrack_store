@@ -26,13 +26,15 @@ class OrderService(BaseService):
         self.order_product_repository = OrderProductRepository()
         self.product_repository = ProductRepository()
 
-        self.order_validator = OrderValidator()
+        self.order_validator = OrderValidator(
+            order_repository=self.order_repository
+        )
 
     def create_order(
         self,
-        order_code: str,
-        comment: str,
         creator: User,
+        order_code: str,
+        comment: str = "",
     ) -> Order:
         with transaction.atomic():
             validated_data = self.order_validator.validate_create(

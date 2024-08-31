@@ -12,7 +12,7 @@ from graintrack_store.users.models import User
 class Order(BaseModel):
     creator = models.ForeignKey(User, related_name="orders", on_delete=models.PROTECT)
     status = models.CharField(max_length=OrderConstants.STATUS_MAX_LENGTH, choices=OrderConstants.STATUS_CHOICE)
-    order_code = models.CharField(max_length=OrderConstants.ORDER_CODE_MAX_LENGTH)
+    order_code = models.CharField(max_length=OrderConstants.ORDER_CODE_MAX_LENGTH, unique=True)
     comment = models.CharField(max_length=OrderConstants.COMMENT_MAX_LENGTH, default="")
     total_sum = models.DecimalField(max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES)
 

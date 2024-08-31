@@ -56,7 +56,7 @@ class ProductDiscountService(BaseService):
         with transaction.atomic():
             instance = self.product_discount_repository.retrieve_by_uuid(instance_uuid=instance_uuid)
             if not instance:
-                raise NotFound("Order object not found")
+                raise NotFound("Product discount object not found")
 
             validated_data = self.product_discount_validator.validate_update(
                 discount_started_at=discount_started_at,

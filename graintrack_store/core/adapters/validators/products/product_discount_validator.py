@@ -24,12 +24,14 @@ class ProductDiscountValidator:
         discount_started_at: datetime,
         discount_ended_at: datetime,
         discount_percentage: Decimal,
+        is_active: bool = True
     ) -> ProductDiscountCreateOutSchema:
         data = {
             "product_uuid": product_uuid,
             "discount_started_at": discount_started_at,
             "discount_ended_at": discount_ended_at,
             "discount_percentage": discount_percentage,
+            "is_active": is_active,
         }
         schema = ProductDiscountCreateInSchema(**data)
 

@@ -1,12 +1,11 @@
 from decimal import Decimal
 from types import EllipsisType
-from typing import List, Iterable
-from uuid import UUID
+from typing import List, Iterable, Dict, Any
 
 from django.db.models import F
 
 from graintrack_store.core.adapters.filters.products.product_filters import ProductFilterSet
-from graintrack_store.core.adapters.repositories.base import BaseRepository
+from graintrack_store.core.adapters.repositories.base import BaseRepository, ModelType
 from graintrack_store.core.utils import remove_ellipsis_fields
 from graintrack_store.products.models import Product
 
@@ -15,14 +14,17 @@ class ProductRepository(BaseRepository):
     model = Product
     filterset = ProductFilterSet
 
+    def get_base_qs(self):
+        return Product.objects.select_related("category").all()
+
     def create(
         self,
-        is_deleted: bool,
         name: str,
         category_id: int,
         price: Decimal,
-        description:str,
-        available_quantity: int,
+        is_deleted: bool = False,
+        available_quantity: int = 0,
+        description: str = "",
     ) -> Product:
         data = {
             "is_deleted": is_deleted,
@@ -59,6 +61,18 @@ class ProductRepository(BaseRepository):
 
         instance.save()
         return instance
+
+    def list(self, filters: Dict[str, Any] = None) -> List[Product]:
+        queryset = self.get_base_qs()
+        queryset = queryset.filter(available_quantity__gt=0)
+
+        if self.filterset and filters:
+            filterset = self.filterset(filters, queryset)
+            filterset.is_valid()
+            queryset = filterset.qs
+        queryset = queryset.order_by(self.default_ordering)
+
+        return list(queryset)
 
     def bulk_update(self, instances: Iterable[Product], fields: List[str], **kwargs) -> None:
         return Product.objects.bulk_update(instances, fields=fields, **kwargs)

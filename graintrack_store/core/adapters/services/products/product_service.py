@@ -30,7 +30,7 @@ class ProductService(BaseService):
         category_uuid: UUID,
         name: str,
         price: Decimal,
-        description: str,
+        description: str = "",
     ) -> Product:
         with transaction.atomic():
             validated_data = self.product_validator.validate_create(
@@ -51,7 +51,7 @@ class ProductService(BaseService):
         is_deleted: bool | EllipsisType = ...,
         name: str | EllipsisType = ...,
         price: Decimal | EllipsisType = ...,
-        description:str | EllipsisType = ...,
+        description: str | EllipsisType = ...,
     ) -> Product:
         with transaction.atomic():
             instance = self.product_repository.retrieve_by_uuid(instance_uuid=instance_uuid)
