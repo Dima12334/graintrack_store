@@ -1,4 +1,5 @@
 from types import EllipsisType
+from typing import List, Dict, Any
 from uuid import UUID
 
 from django.db import transaction
@@ -11,6 +12,7 @@ from graintrack_store.core.adapters.services.base import BaseService
 from graintrack_store.core.adapters.validators.orders.order_validator import OrderValidator
 from graintrack_store.orders.constants import OrderConstants
 from graintrack_store.orders.models import Order
+from graintrack_store.users.constants import UserConstants
 from graintrack_store.users.models import User
 
 
@@ -98,3 +100,10 @@ class OrderService(BaseService):
             deleted = self.order_repository.delete(instance_uuid=instance_uuid)
             if not deleted:
                 raise ValidationError("Failed to delete order.")
+
+    def list_orders(self, user: User, filters: Dict[str, Any] = None) -> List[Order]:
+        if user.role == UserConstants.ROLE_CHOICE.MODERATOR:
+            orders = self.order_repository.list(filters=filters)
+        else:
+            orders = self.order_repository.list_by_creator(creator=user, filters=filters)
+        return orders

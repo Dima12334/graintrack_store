@@ -1,10 +1,12 @@
 from decimal import Decimal
 from types import EllipsisType
+from typing import Dict, Any, List
 
 from graintrack_store.core.adapters.filters.orders.order_filters import OrderFilterSet
 from graintrack_store.core.adapters.repositories.base import BaseRepository
 from graintrack_store.core.utils import remove_ellipsis_fields
 from graintrack_store.orders.models import Order
+from graintrack_store.users.models import User
 
 
 class OrderRepository(BaseRepository):
@@ -52,6 +54,18 @@ class OrderRepository(BaseRepository):
 
         instance.save()
         return instance
+
+    def list_by_creator(self, creator: User, filters: Dict[str, Any] = None) -> List[Order]:
+        queryset = self.get_base_qs()
+        queryset = queryset.filter(creator=creator)
+
+        if self.filterset and filters:
+            filterset = self.filterset(filters, queryset)
+            filterset.is_valid()
+            queryset = filterset.qs
+        queryset = queryset.order_by(self.default_ordering)
+
+        return list(queryset)
 
     def check_existence_by_order_code(self, order_code: str) -> bool:
         return Order.objects.filter(order_code=order_code).exists()
