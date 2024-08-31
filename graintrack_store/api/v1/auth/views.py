@@ -4,7 +4,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from graintrack_store.api.v1.auth.serializers import LoginSerializer, UserSerializer, LogoutSerializer
+from graintrack_store.api.v1.auth.serializers import (
+    LoginSerializer,
+    UserSerializer,
+    LogoutSerializer,
+)
 from graintrack_store.core.api.views import ProjectGenericAPIView
 
 

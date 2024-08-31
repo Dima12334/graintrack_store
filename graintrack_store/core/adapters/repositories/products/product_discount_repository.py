@@ -4,7 +4,9 @@ from types import EllipsisType
 from typing import Optional
 from uuid import UUID
 
-from graintrack_store.core.adapters.filters.products.product_discount_filters import ProductDiscountFilterSet
+from graintrack_store.core.adapters.filters.products.product_discount_filters import (
+    ProductDiscountFilterSet,
+)
 from graintrack_store.core.adapters.repositories.base import BaseRepository
 from graintrack_store.core.utils import remove_ellipsis_fields
 from graintrack_store.products.models import ProductDiscount
@@ -30,7 +32,7 @@ class ProductDiscountRepository(BaseRepository):
             "discount_started_at": discount_started_at,
             "discount_ended_at": discount_ended_at,
             "discount_percentage": discount_percentage,
-            "is_active": is_active
+            "is_active": is_active,
         }
         product_discount = ProductDiscount(**data)
         product_discount.save()
@@ -58,5 +60,7 @@ class ProductDiscountRepository(BaseRepository):
         instance.save()
         return instance
 
-    def get_discount_by_product_uuid(self, product_uuid: UUID) -> Optional[ProductDiscount]:
+    def get_discount_by_product_uuid(
+        self, product_uuid: UUID
+    ) -> Optional[ProductDiscount]:
         return ProductDiscount.objects.filter(product__uuid=product_uuid).first()

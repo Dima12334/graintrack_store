@@ -1,8 +1,12 @@
 from rest_framework.exceptions import ValidationError
 
-from graintrack_store.core.adapters.repositories.products.product_repository import ProductRepository
-from graintrack_store.core.adapters.schemas.products.product_income_schemas import ProductIncomeCreateOutSchema, \
-    ProductIncomeCreateInSchema
+from graintrack_store.core.adapters.repositories.products.product_repository import (
+    ProductRepository,
+)
+from graintrack_store.core.adapters.schemas.products.product_income_schemas import (
+    ProductIncomeCreateOutSchema,
+    ProductIncomeCreateInSchema,
+)
 from uuid import UUID
 
 
@@ -14,17 +18,14 @@ class ProductIncomeValidator:
         self.product_repository = product_repository
 
     def validate_create(
-        self,
-        product_uuid: UUID,
-        quantity: int
+        self, product_uuid: UUID, quantity: int
     ) -> ProductIncomeCreateOutSchema:
-        data = {
-            "product_uuid": product_uuid,
-            "quantity": quantity
-        }
+        data = {"product_uuid": product_uuid, "quantity": quantity}
         schema = ProductIncomeCreateInSchema(**data)
 
-        product = self.product_repository.retrieve_by_uuid(instance_uuid=schema.product_uuid)
+        product = self.product_repository.retrieve_by_uuid(
+            instance_uuid=schema.product_uuid
+        )
         if not product:
             raise ValidationError(f"Product with uuid {schema.product_uuid} not found.")
 

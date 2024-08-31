@@ -1,16 +1,29 @@
 from django.db import models
 
-from graintrack_store.core.constants import DECIMAL_MAX_DIGITS, DECIMAL_PLACES, DECIMAL_PLACES_FOR_PERCENT, \
-    DECIMAL_MAX_DIGITS_FOR_PERCENT
+from graintrack_store.core.constants import (
+    DECIMAL_MAX_DIGITS,
+    DECIMAL_PLACES,
+    DECIMAL_PLACES_FOR_PERCENT,
+    DECIMAL_MAX_DIGITS_FOR_PERCENT,
+)
 from graintrack_store.core.models import BaseModel
-from graintrack_store.products.constants import ProductConstants, ProductCategoryConstants
+from graintrack_store.products.constants import (
+    ProductConstants,
+    ProductCategoryConstants,
+)
 
 
 class ProductCategory(BaseModel):
     name = models.CharField(max_length=ProductCategoryConstants.NAME_MAX_LENGTH)
-    description = models.CharField(max_length=ProductCategoryConstants.DESCRIPTION_MAX_LENGTH, default="")
+    description = models.CharField(
+        max_length=ProductCategoryConstants.DESCRIPTION_MAX_LENGTH, default=""
+    )
     parent_category = models.ForeignKey(
-        "self", on_delete=models.PROTECT, null=True, default=None, related_name="child_categories"
+        "self",
+        on_delete=models.PROTECT,
+        null=True,
+        default=None,
+        related_name="child_categories",
     )
 
     class Meta:
@@ -25,8 +38,12 @@ class Product(BaseModel):
     category = models.ForeignKey(
         ProductCategory, null=False, related_name="products", on_delete=models.PROTECT
     )
-    price = models.DecimalField(max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES)
-    description = models.CharField(max_length=ProductConstants.DESCRIPTION_MAX_LENGTH, default="")
+    price = models.DecimalField(
+        max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES
+    )
+    description = models.CharField(
+        max_length=ProductConstants.DESCRIPTION_MAX_LENGTH, default=""
+    )
     available_quantity = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -49,15 +66,13 @@ class ProductIncome(BaseModel):
 
 class ProductDiscount(BaseModel):
     product = models.OneToOneField(
-        Product,
-        null=False,
-        related_name="product_discount",
-        on_delete=models.CASCADE
+        Product, null=False, related_name="product_discount", on_delete=models.CASCADE
     )
     discount_started_at = models.DateTimeField()
     discount_ended_at = models.DateTimeField()
     discount_percentage = models.DecimalField(
-        max_digits=DECIMAL_MAX_DIGITS_FOR_PERCENT, decimal_places=DECIMAL_PLACES_FOR_PERCENT
+        max_digits=DECIMAL_MAX_DIGITS_FOR_PERCENT,
+        decimal_places=DECIMAL_PLACES_FOR_PERCENT,
     )
     is_active = models.BooleanField(default=True)
 

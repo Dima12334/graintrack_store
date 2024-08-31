@@ -4,9 +4,14 @@ from types import EllipsisType
 
 from rest_framework.exceptions import ValidationError
 
-from graintrack_store.core.adapters.repositories.products.product_repository import ProductRepository
-from graintrack_store.core.adapters.schemas.products.product_discount_schemas import ProductDiscountCreateOutSchema, \
-    ProductDiscountUpdateSchema, ProductDiscountCreateInSchema
+from graintrack_store.core.adapters.repositories.products.product_repository import (
+    ProductRepository,
+)
+from graintrack_store.core.adapters.schemas.products.product_discount_schemas import (
+    ProductDiscountCreateOutSchema,
+    ProductDiscountUpdateSchema,
+    ProductDiscountCreateInSchema,
+)
 from uuid import UUID
 
 from graintrack_store.core.utils import remove_ellipsis_fields
@@ -24,7 +29,7 @@ class ProductDiscountValidator:
         discount_started_at: datetime,
         discount_ended_at: datetime,
         discount_percentage: Decimal,
-        is_active: bool = True
+        is_active: bool = True,
     ) -> ProductDiscountCreateOutSchema:
         data = {
             "product_uuid": product_uuid,
@@ -35,7 +40,9 @@ class ProductDiscountValidator:
         }
         schema = ProductDiscountCreateInSchema(**data)
 
-        product = self.product_repository.retrieve_by_uuid(instance_uuid=schema.product_uuid)
+        product = self.product_repository.retrieve_by_uuid(
+            instance_uuid=schema.product_uuid
+        )
         if not product:
             raise ValidationError(f"Product with uuid {schema.product_uuid} not found.")
 

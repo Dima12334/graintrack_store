@@ -18,7 +18,7 @@ class ProductCategoryRepository(BaseRepository):
         data = {
             "name": name,
             "description": description,
-            "parent_category_id": parent_category_id
+            "parent_category_id": parent_category_id,
         }
         product_category = ProductCategory(**data)
         product_category.save()

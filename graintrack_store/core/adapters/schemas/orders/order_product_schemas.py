@@ -16,12 +16,14 @@ class OrderProductCreateOutSchema(BaseModel):
     order_id: int
     product_id: int
     quantity: int = Field(gt=0)
-    price: Decimal = Field(max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES, gt=Decimal(0))
+    price: Decimal = Field(
+        max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES, gt=Decimal(0)
+    )
     discount: Decimal = Field(
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_PLACES,
         ge=Decimal(0),
-        default=Decimal(0)
+        default=Decimal(0),
     )
 
 

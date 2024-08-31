@@ -1,5 +1,3 @@
-
-
 class ProductCategoryConstants:
     NAME_MAX_LENGTH = 150
     DESCRIPTION_MAX_LENGTH = 500

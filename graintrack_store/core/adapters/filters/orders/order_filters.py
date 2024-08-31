@@ -13,4 +13,10 @@ class OrderFilterSet(FilterSet):
 
     class Meta:
         model = Order
-        field = ["status", "created_at_min", "created_at_max", "total_sum_min", "total_sum_max"]
+        field = [
+            "status",
+            "created_at_min",
+            "created_at_max",
+            "total_sum_min",
+            "total_sum_max",
+        ]

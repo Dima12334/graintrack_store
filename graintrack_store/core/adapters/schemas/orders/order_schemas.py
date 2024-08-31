@@ -15,7 +15,7 @@ class OrderCreateSchema(BaseModel):
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_PLACES,
         ge=Decimal(0),
-        default=Decimal(0)
+        default=Decimal(0),
     )
 
 

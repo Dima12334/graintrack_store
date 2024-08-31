@@ -5,11 +5,19 @@ from uuid import UUID
 from django.db import transaction
 from rest_framework.exceptions import NotFound, ValidationError
 
-from graintrack_store.core.adapters.repositories.orders.order_product_repository import OrderProductRepository
-from graintrack_store.core.adapters.repositories.orders.order_repository import OrderRepository
-from graintrack_store.core.adapters.repositories.products.product_repository import ProductRepository
+from graintrack_store.core.adapters.repositories.orders.order_product_repository import (
+    OrderProductRepository,
+)
+from graintrack_store.core.adapters.repositories.orders.order_repository import (
+    OrderRepository,
+)
+from graintrack_store.core.adapters.repositories.products.product_repository import (
+    ProductRepository,
+)
 from graintrack_store.core.adapters.services.base import BaseService
-from graintrack_store.core.adapters.validators.orders.order_validator import OrderValidator
+from graintrack_store.core.adapters.validators.orders.order_validator import (
+    OrderValidator,
+)
 from graintrack_store.orders.constants import OrderConstants
 from graintrack_store.orders.models import Order
 from graintrack_store.users.constants import UserConstants
@@ -28,9 +36,7 @@ class OrderService(BaseService):
         self.order_product_repository = OrderProductRepository()
         self.product_repository = ProductRepository()
 
-        self.order_validator = OrderValidator(
-            order_repository=self.order_repository
-        )
+        self.order_validator = OrderValidator(order_repository=self.order_repository)
 
     def create_order(
         self,
@@ -56,13 +62,14 @@ class OrderService(BaseService):
         comment: str | EllipsisType = ...,
     ) -> Order:
         with transaction.atomic():
-            instance = self.order_repository.retrieve_by_uuid(instance_uuid=instance_uuid)
+            instance = self.order_repository.retrieve_by_uuid(
+                instance_uuid=instance_uuid
+            )
             if not instance:
                 raise NotFound("Order object not found")
 
             validated_data = self.order_validator.validate_update(
-                status=status,
-                comment=comment
+                status=status, comment=comment
             )
             order = self.order_repository.update(
                 instance, **validated_data.dict(exclude_unset=True)
@@ -71,7 +78,9 @@ class OrderService(BaseService):
 
     def delete_order(self, instance_uuid: UUID) -> None:
         with transaction.atomic():
-            instance = self.order_repository.retrieve_by_uuid(instance_uuid=instance_uuid)
+            instance = self.order_repository.retrieve_by_uuid(
+                instance_uuid=instance_uuid
+            )
             if not instance:
                 raise NotFound("Order object not found")
 
@@ -105,5 +114,7 @@ class OrderService(BaseService):
         if user.role == UserConstants.ROLE_CHOICE.MODERATOR:
             orders = self.order_repository.list(filters=filters)
         else:
-            orders = self.order_repository.list_by_creator(creator=user, filters=filters)
+            orders = self.order_repository.list_by_creator(
+                creator=user, filters=filters
+            )
         return orders

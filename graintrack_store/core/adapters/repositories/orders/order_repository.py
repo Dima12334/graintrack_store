@@ -55,7 +55,9 @@ class OrderRepository(BaseRepository):
         instance.save()
         return instance
 
-    def list_by_creator(self, creator: User, filters: Dict[str, Any] = None) -> List[Order]:
+    def list_by_creator(
+        self, creator: User, filters: Dict[str, Any] = None
+    ) -> List[Order]:
         queryset = self.get_base_qs()
         queryset = queryset.filter(creator=creator)
 

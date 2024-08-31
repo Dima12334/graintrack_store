@@ -5,10 +5,16 @@ from uuid import UUID
 from django.db import transaction
 from rest_framework.exceptions import NotFound
 
-from graintrack_store.core.adapters.repositories.products.product_category_repository import ProductCategoryRepository
-from graintrack_store.core.adapters.repositories.products.product_repository import ProductRepository
+from graintrack_store.core.adapters.repositories.products.product_category_repository import (
+    ProductCategoryRepository,
+)
+from graintrack_store.core.adapters.repositories.products.product_repository import (
+    ProductRepository,
+)
 from graintrack_store.core.adapters.services.base import BaseService
-from graintrack_store.core.adapters.validators.products.product_validator import ProductValidator
+from graintrack_store.core.adapters.validators.products.product_validator import (
+    ProductValidator,
+)
 from graintrack_store.products.models import Product
 
 
@@ -37,7 +43,7 @@ class ProductService(BaseService):
                 category_uuid=category_uuid,
                 name=name,
                 price=price,
-                description=description
+                description=description,
             )
             product = self.product_repository.create(
                 **validated_data.dict(exclude_unset=True)
@@ -54,7 +60,9 @@ class ProductService(BaseService):
         description: str | EllipsisType = ...,
     ) -> Product:
         with transaction.atomic():
-            instance = self.product_repository.retrieve_by_uuid(instance_uuid=instance_uuid)
+            instance = self.product_repository.retrieve_by_uuid(
+                instance_uuid=instance_uuid
+            )
             if not instance:
                 raise NotFound("Product object not found")
 

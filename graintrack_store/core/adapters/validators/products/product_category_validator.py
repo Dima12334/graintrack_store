@@ -3,9 +3,14 @@ from typing import Optional
 
 from rest_framework.exceptions import ValidationError
 
-from graintrack_store.core.adapters.repositories.products.product_category_repository import ProductCategoryRepository
-from graintrack_store.core.adapters.schemas.products.product_category_schemas import ProductCategoryCreateOutSchema, \
-    ProductCategoryUpdateSchema, ProductCategoryCreateInSchema
+from graintrack_store.core.adapters.repositories.products.product_category_repository import (
+    ProductCategoryRepository,
+)
+from graintrack_store.core.adapters.schemas.products.product_category_schemas import (
+    ProductCategoryCreateOutSchema,
+    ProductCategoryUpdateSchema,
+    ProductCategoryCreateInSchema,
+)
 from uuid import UUID
 
 from graintrack_store.core.utils import remove_ellipsis_fields
@@ -35,7 +40,9 @@ class ProductCategoryValidator:
                 instance_uuid=schema.parent_category_uuid
             )
             if not parent_category:
-                raise ValidationError(f"Product category with uuid {schema.parent_category_uuid} not found.")
+                raise ValidationError(
+                    f"Product category with uuid {schema.parent_category_uuid} not found."
+                )
             parent_category_id = parent_category.id
         else:
             parent_category_id = ...

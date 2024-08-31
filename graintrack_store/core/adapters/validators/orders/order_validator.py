@@ -2,8 +2,13 @@ from types import EllipsisType
 
 from rest_framework.exceptions import ValidationError
 
-from graintrack_store.core.adapters.repositories.orders.order_repository import OrderRepository
-from graintrack_store.core.adapters.schemas.orders.order_schemas import OrderCreateSchema, OrderUpdateSchema
+from graintrack_store.core.adapters.repositories.orders.order_repository import (
+    OrderRepository,
+)
+from graintrack_store.core.adapters.schemas.orders.order_schemas import (
+    OrderCreateSchema,
+    OrderUpdateSchema,
+)
 from graintrack_store.core.utils import remove_ellipsis_fields
 from graintrack_store.orders.constants import OrderConstants
 from graintrack_store.orders.models import Order
@@ -32,7 +37,9 @@ class OrderValidator:
             order_code=schema.order_code
         )
         if order_already_exists:
-            raise ValidationError(f"Order with such order code {schema.order_code} already exists.")
+            raise ValidationError(
+                f"Order with such order code {schema.order_code} already exists."
+            )
 
         return schema
 
@@ -52,4 +59,6 @@ class OrderValidator:
     def validate_delete(self, instance: Order) -> None:
         sold_order_status = OrderConstants.STATUS_CHOICE.SOLD
         if instance.status == sold_order_status:
-            raise ValidationError(f"You cannot delete order in {sold_order_status} status.")
+            raise ValidationError(
+                f"You cannot delete order in {sold_order_status} status."
+            )

@@ -17,7 +17,9 @@ class ProductFilterSet(FilterSet):
         model = Product
         field = ["category", "name", "price_min", "price_max"]
 
-    def get_descendant_categories(self, parent_category: ProductCategory) -> List[ProductCategory]:
+    def get_descendant_categories(
+        self, parent_category: ProductCategory
+    ) -> List[ProductCategory]:
         """
         Recursively get all descendant categories of a given category.
         """
@@ -32,7 +34,9 @@ class ProductFilterSet(FilterSet):
         if not parent_category:
             raise ValidationError(f"Category with uuid {value} not found.")
 
-        descendant_categories = self.get_descendant_categories(parent_category=parent_category)
+        descendant_categories = self.get_descendant_categories(
+            parent_category=parent_category
+        )
         categories = [parent_category, *descendant_categories]
 
         return queryset.filter(category__in=categories)

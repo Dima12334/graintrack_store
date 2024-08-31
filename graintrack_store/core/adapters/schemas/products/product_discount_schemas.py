@@ -4,7 +4,10 @@ from typing import Optional
 from uuid import UUID
 from pydantic import BaseModel, Field
 
-from graintrack_store.core.constants import DECIMAL_MAX_DIGITS_FOR_PERCENT, DECIMAL_PLACES_FOR_PERCENT
+from graintrack_store.core.constants import (
+    DECIMAL_MAX_DIGITS_FOR_PERCENT,
+    DECIMAL_PLACES_FOR_PERCENT,
+)
 
 
 class ProductDiscountCreateInSchema(BaseModel):
@@ -14,7 +17,7 @@ class ProductDiscountCreateInSchema(BaseModel):
     discount_percentage: Decimal = Field(
         max_digits=DECIMAL_MAX_DIGITS_FOR_PERCENT,
         decimal_places=DECIMAL_PLACES_FOR_PERCENT,
-        gt=Decimal(0)
+        gt=Decimal(0),
     )
     is_active: bool = Field(default=True)
 
@@ -26,7 +29,7 @@ class ProductDiscountCreateOutSchema(BaseModel):
     discount_percentage: Decimal = Field(
         max_digits=DECIMAL_MAX_DIGITS_FOR_PERCENT,
         decimal_places=DECIMAL_PLACES_FOR_PERCENT,
-        gt=Decimal(0)
+        gt=Decimal(0),
     )
     is_active: bool = Field(default=True)
 
@@ -37,6 +40,6 @@ class ProductDiscountUpdateSchema(BaseModel):
     discount_percentage: Optional[Decimal] = Field(
         max_digits=DECIMAL_MAX_DIGITS_FOR_PERCENT,
         decimal_places=DECIMAL_PLACES_FOR_PERCENT,
-        gt=Decimal(0)
+        gt=Decimal(0),
     )
     is_active: Optional[bool]

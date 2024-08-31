@@ -11,10 +11,17 @@ from graintrack_store.users.models import User
 
 class Order(BaseModel):
     creator = models.ForeignKey(User, related_name="orders", on_delete=models.PROTECT)
-    status = models.CharField(max_length=OrderConstants.STATUS_MAX_LENGTH, choices=OrderConstants.STATUS_CHOICE)
-    order_code = models.CharField(max_length=OrderConstants.ORDER_CODE_MAX_LENGTH, unique=True)
+    status = models.CharField(
+        max_length=OrderConstants.STATUS_MAX_LENGTH,
+        choices=OrderConstants.STATUS_CHOICE,
+    )
+    order_code = models.CharField(
+        max_length=OrderConstants.ORDER_CODE_MAX_LENGTH, unique=True
+    )
     comment = models.CharField(max_length=OrderConstants.COMMENT_MAX_LENGTH, default="")
-    total_sum = models.DecimalField(max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES)
+    total_sum = models.DecimalField(
+        max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES
+    )
 
     class Meta:
         verbose_name = "Order"
@@ -23,14 +30,22 @@ class Order(BaseModel):
 
 
 class OrderProduct(BaseModel):
-    order = models.ForeignKey(Order, related_name="order_products", on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, related_name="order_products", on_delete=models.PROTECT)
+    order = models.ForeignKey(
+        Order, related_name="order_products", on_delete=models.CASCADE
+    )
+    product = models.ForeignKey(
+        Product, related_name="order_products", on_delete=models.PROTECT
+    )
     quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES)
-    discount = models.DecimalField(max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES, default=Decimal(0))
+    price = models.DecimalField(
+        max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES
+    )
+    discount = models.DecimalField(
+        max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES, default=Decimal(0)
+    )
 
     class Meta:
         verbose_name = "Order product"
         verbose_name_plural = "Order products"
         db_table = "order_products"
-        unique_together = ("order","product")
+        unique_together = ("order", "product")

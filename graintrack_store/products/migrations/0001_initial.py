@@ -9,84 +9,133 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, db_index=True)),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('name', models.CharField(max_length=250)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('description', models.CharField(default='', max_length=2000)),
-                ('available_quantity', models.PositiveIntegerField(default=0)),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False, unique=True
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("name", models.CharField(max_length=250)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("description", models.CharField(default="", max_length=2000)),
+                ("available_quantity", models.PositiveIntegerField(default=0)),
             ],
             options={
-                'verbose_name': 'Product',
-                'verbose_name_plural': 'Products',
-                'db_table': 'products',
+                "verbose_name": "Product",
+                "verbose_name_plural": "Products",
+                "db_table": "products",
             },
         ),
         migrations.CreateModel(
-            name='ProductIncome',
+            name="ProductIncome",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, db_index=True)),
-                ('quantity', models.PositiveIntegerField()),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='product_incomes', to='products.product')),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False, unique=True
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
+                ("quantity", models.PositiveIntegerField()),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="product_incomes",
+                        to="products.product",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Product income',
-                'verbose_name_plural': 'Product incomes',
-                'db_table': 'product_incomes',
+                "verbose_name": "Product income",
+                "verbose_name_plural": "Product incomes",
+                "db_table": "product_incomes",
             },
         ),
         migrations.CreateModel(
-            name='ProductDiscount',
+            name="ProductDiscount",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, db_index=True)),
-                ('discount_started_at', models.DateTimeField()),
-                ('discount_ended_at', models.DateTimeField()),
-                ('discount_percentage', models.DecimalField(decimal_places=1, max_digits=3)),
-                ('is_active', models.BooleanField(default=True)),
-                ('product', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='product_discount', to='products.product')),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False, unique=True
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
+                ("discount_started_at", models.DateTimeField()),
+                ("discount_ended_at", models.DateTimeField()),
+                (
+                    "discount_percentage",
+                    models.DecimalField(decimal_places=1, max_digits=3),
+                ),
+                ("is_active", models.BooleanField(default=True)),
+                (
+                    "product",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="product_discount",
+                        to="products.product",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Product discount',
-                'verbose_name_plural': 'Product discounts',
-                'db_table': 'product_discounts',
+                "verbose_name": "Product discount",
+                "verbose_name_plural": "Product discounts",
+                "db_table": "product_discounts",
             },
         ),
         migrations.CreateModel(
-            name='ProductCategory',
+            name="ProductCategory",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, db_index=True)),
-                ('name', models.CharField(max_length=150)),
-                ('description', models.CharField(default='', max_length=500)),
-                ('parent_category', models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='child_categories', to='products.productcategory')),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False, unique=True
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
+                ("name", models.CharField(max_length=150)),
+                ("description", models.CharField(default="", max_length=500)),
+                (
+                    "parent_category",
+                    models.ForeignKey(
+                        default=None,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="child_categories",
+                        to="products.productcategory",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Product category',
-                'verbose_name_plural': 'Product categories',
-                'db_table': 'product_categories',
+                "verbose_name": "Product category",
+                "verbose_name_plural": "Product categories",
+                "db_table": "product_categories",
             },
         ),
         migrations.AddField(
-            model_name='product',
-            name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='products', to='products.productcategory'),
+            model_name="product",
+            name="category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="products",
+                to="products.productcategory",
+            ),
         ),
     ]
