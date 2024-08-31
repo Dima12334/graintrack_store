@@ -17,11 +17,7 @@ class BaseRepository:
     def get_base_qs(self):
         return self.model.objects.all()
 
-    def list(
-        self,
-        queryset: QuerySet,
-        filters: Dict[str, Any] = None
-    ) -> List[ModelType]:
+    def list(self, filters: Dict[str, Any] = None) -> List[ModelType]:
         queryset = self.get_base_qs()
 
         if self.filterset and filters:
@@ -35,5 +31,8 @@ class BaseRepository:
     def retrieve(self, instance_uuid: UUID) -> Optional[ModelType]:
         queryset = self.get_base_qs()
         queryset = queryset.filter(uuid=instance_uuid)
-
         return queryset.first()
+
+    def delete(self, instance_uuid: UUID) -> bool:
+        result = self.model.objects.filter(uuid=instance_uuid).delete()
+        return result[0]
