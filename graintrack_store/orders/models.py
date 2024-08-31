@@ -33,3 +33,4 @@ class OrderProduct(BaseModel):
         verbose_name = "Order product"
         verbose_name_plural = "Order products"
         db_table = "order_products"
+        unique_together = ("order","product")

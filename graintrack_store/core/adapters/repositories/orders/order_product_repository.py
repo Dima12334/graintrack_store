@@ -11,6 +11,9 @@ class OrderProductRepository(BaseRepository):
     model = OrderProduct
     filterset = OrderProductFilterSet
 
+    def get_base_qs(self):
+        return OrderProduct.objects.select_related("order", "product")
+
     def create(
         self,
         order_id: int,
@@ -45,3 +48,6 @@ class OrderProductRepository(BaseRepository):
 
         instance.save()
         return instance
+
+    def check_existence_by_order_and_product(self, order_id: int, product_id: int) -> bool:
+        return OrderProduct.objects.filter(order_id=order_id, product_id=product_id).exists()

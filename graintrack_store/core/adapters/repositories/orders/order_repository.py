@@ -35,10 +35,12 @@ class OrderRepository(BaseRepository):
         instance: Order,
         status: str | EllipsisType = ...,
         comment: str | EllipsisType = ...,
+        total_sum: Decimal | EllipsisType = ...,
     ) -> Order:
         data = {
             "status": status,
             "comment": comment,
+            "total_sum": total_sum,
         }
         data = remove_ellipsis_fields(data)
 

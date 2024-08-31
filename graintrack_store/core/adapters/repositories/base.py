@@ -28,9 +28,14 @@ class BaseRepository:
 
         return list(queryset)
 
-    def retrieve(self, instance_uuid: UUID) -> Optional[ModelType]:
+    def retrieve_by_uuid(self, instance_uuid: UUID) -> Optional[ModelType]:
         queryset = self.get_base_qs()
         queryset = queryset.filter(uuid=instance_uuid)
+        return queryset.first()
+
+    def retrieve_by_id(self, instance_id: int) -> Optional[ModelType]:
+        queryset = self.get_base_qs()
+        queryset = queryset.filter(id=instance_id)
         return queryset.first()
 
     def delete(self, instance_uuid: UUID) -> bool:

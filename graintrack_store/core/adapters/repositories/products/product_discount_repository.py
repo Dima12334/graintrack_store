@@ -1,6 +1,8 @@
 from datetime import datetime
 from decimal import Decimal
 from types import EllipsisType
+from typing import Optional
+from uuid import UUID
 
 from graintrack_store.core.adapters.filters.products.product_discount_filters import ProductDiscountFilterSet
 from graintrack_store.core.adapters.repositories.base import BaseRepository
@@ -53,3 +55,5 @@ class ProductDiscountRepository(BaseRepository):
         instance.save()
         return instance
 
+    def get_discount_by_product_uuid(self, product_uuid: UUID) -> Optional[ProductDiscount]:
+        return ProductDiscount.objects.filter(product__uuid=product_uuid).first()

@@ -13,14 +13,13 @@ class ProductCategoryRepository(BaseRepository):
         self,
         name: str,
         description: str,
-        parent_category_id: Optional[int] | EllipsisType = ...,
+        parent_category_id: Optional[int] = None,
     ) -> ProductCategory:
         data = {
             "name": name,
             "description": description,
             "parent_category_id": parent_category_id
         }
-        data = remove_ellipsis_fields(data)
         product_category = ProductCategory(**data)
         product_category.save()
         return product_category
