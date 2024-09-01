@@ -76,7 +76,7 @@ class ProductUpdateSerializer(BaseProjectModelSerializer):
 
 class CategoryNameAndProductsCountSerializer(drf_serializers.Serializer):
     category_name = drf_serializers.CharField(read_only=True)
-    products_count = drf_serializers.IntegerField(read_only=True)
+    sold_products_count = drf_serializers.IntegerField(read_only=True)
 
 
 class SoldProductsReportSerializer(drf_serializers.Serializer):

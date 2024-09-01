@@ -52,8 +52,9 @@ class SoldProductsReportFilterSet(CategoryFilterMixin, FilterSet):
     sold_at_max = DateTimeFilter(
         lookup_expr="lte", field_name="order_products__order__sold_at"
     )
+    name = CharFilter(lookup_expr="icontains")
     category = UUIDFilter(method="filter_category")
 
     class Meta:
         model = Product
-        fields = ["sold_at_min", "sold_at_max", "category"]
+        fields = ["sold_at_min", "sold_at_max", "name", "category"]

@@ -2,7 +2,7 @@ from decimal import Decimal
 from types import EllipsisType
 from typing import List, Iterable, Dict, Any
 
-from django.db.models import F, Count, Q, Subquery, OuterRef
+from django.db.models import F, Q, Subquery, OuterRef, Sum
 
 from graintrack_store.core.adapters.filters.products.product_filters import (
     ProductFilterSet,
@@ -117,16 +117,16 @@ class ProductRepository(BaseRepository):
         ).values_list("product_id", flat=True)
 
         result = queryset.aggregate(
-            all_sold_products_count=Count("id", distinct=True),
-            sold_products_with_discount_count=Count(
-                "id",
+            all_sold_products_count=Sum("order_products__quantity", default=0),
+            sold_products_with_discount_count=Sum(
+                "order_products__quantity",
                 filter=Q(id__in=Subquery(order_products_with_discount_subquery)),
-                distinct=True,
+                default=0,
             ),
         )
         sold_products_by_categories = list(
             queryset.values(category_name=F("category__name")).annotate(
-                products_count=Count("category_name", distinct=True)
+                sold_products_count=Sum("order_products__quantity", default=0)
             )
         )
         result["sold_products_by_categories"] = sold_products_by_categories
