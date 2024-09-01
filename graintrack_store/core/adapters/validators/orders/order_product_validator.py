@@ -30,6 +30,7 @@ from graintrack_store.core.utils import remove_ellipsis_fields
 
 class OrderProductValidator(BaseValidator):
     order_repository: OrderRepository
+    order_product_repository: OrderProductRepository
     product_repository: ProductRepository
     product_discount_repository: ProductDiscountRepository
 
@@ -65,6 +66,7 @@ class OrderProductValidator(BaseValidator):
         order = self.order_repository.retrieve_by_uuid(instance_uuid=schema.order_uuid)
         if not order:
             raise ValidationError(f"Order with uuid {schema.order_uuid} not found.")
+
         product = self.product_repository.retrieve_by_uuid(
             instance_uuid=schema.product_uuid
         )

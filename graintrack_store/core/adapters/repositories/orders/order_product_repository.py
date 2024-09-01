@@ -102,3 +102,7 @@ class OrderProductRepository(BaseRepository):
         return OrderProduct.objects.filter(
             order_id=order_id, product_id=product_id
         ).exists()
+
+    def get_order_products_by_order_uuid(self, order_uuid: UUID) -> List[OrderProduct]:
+        queryset = OrderProduct.objects.filter(order__uuid=order_uuid)
+        return list(queryset)

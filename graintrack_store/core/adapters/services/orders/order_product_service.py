@@ -107,6 +107,7 @@ class OrderProductService(BaseService):
             order_product = self.order_product_repository.update(
                 instance, **validated_data.dict(exclude_unset=True)
             )
+
             new_order_product_sum = order_product.quantity * (
                 order_product.price - order_product.discount
             )
@@ -155,9 +156,9 @@ class OrderProductService(BaseService):
         self, user: User, filters: Dict[str, Any] = None
     ) -> List[OrderProduct]:
         if user.role == UserConstants.ROLE_CHOICE.MODERATOR:
-            orders = self.order_product_repository.list(filters=filters)
+            order_products = self.order_product_repository.list(filters=filters)
         else:
-            orders = self.order_product_repository.list_by_order_creator(
+            order_products = self.order_product_repository.list_by_order_creator(
                 creator=user, filters=filters
             )
-        return orders
+        return order_products

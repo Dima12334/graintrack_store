@@ -77,8 +77,10 @@ class OrderValidator(BaseValidator):
             raise ValidationError(errors)
 
         if schema.status and schema.status == OrderConstants.STATUS_CHOICE.SOLD:
-            order_products = self.order_product_repository.list(
-                filters={"order": instance.uuid}
+            order_products = (
+                self.order_product_repository.get_order_products_by_order_uuid(
+                    order_uuid=instance.uuid
+                )
             )
             if not order_products:
                 raise ValidationError(

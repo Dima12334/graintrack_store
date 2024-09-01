@@ -29,13 +29,15 @@ or if you loaded db dump, you can use existing user:
 * **password**: ```qwerty```
 6. Done. Use the App.
 
-You can find swagger documentation for API at this url http://127.0.0.1:8000/api/docs/
+You can find Swagger documentation for API at this url http://127.0.0.1:8000/api/docs/
 
 Also you can use Postman [collection](https://elements.getpostman.com/redirect?entityId=25524341-3da7f851-2949-42d0-a6fc-a662c3edc0a6&entityType=collection) to interact with API.
 
 ## API methods description
 
-API entry point: http://127.0.0.1:8000/api/v1/
+API entry point: http://127.0.0.1:8000/api/v1/.
+
+All available filters are listed in the Postman collection and in the Swagger documentation.
 
 ---
 ## Auth

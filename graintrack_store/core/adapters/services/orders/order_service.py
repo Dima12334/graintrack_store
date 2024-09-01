@@ -89,8 +89,11 @@ class OrderService(BaseService):
 
             self.order_validator.validate_delete(instance=instance)
 
-            order_products = self.order_product_repository.list(
-                filters={"order": instance_uuid}
+            # Order will be deleted, so we need to increase available quantity for each product from order
+            order_products = (
+                self.order_product_repository.get_order_products_by_order_uuid(
+                    order_uuid=instance_uuid
+                )
             )
             product_id_to_quantity_mapping = {
                 order_product.product_id: order_product.quantity

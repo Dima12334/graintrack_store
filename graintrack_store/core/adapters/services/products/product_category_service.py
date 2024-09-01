@@ -60,7 +60,7 @@ class ProductCategoryService(BaseService):
             validated_data = self.product_category_validator.validate_update(
                 name=name, description=description
             )
-            parent_category = self.product_category_repository.update(
+            product_category = self.product_category_repository.update(
                 instance, **validated_data.dict(exclude_unset=True)
             )
-        return parent_category
+        return product_category
