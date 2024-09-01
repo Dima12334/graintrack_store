@@ -8,7 +8,7 @@ from graintrack_store.core.adapters.filters.products.product_filters import (
     ProductFilterSet,
     SoldProductsReportFilterSet,
 )
-from graintrack_store.core.adapters.repositories.base import BaseRepository, ModelType
+from graintrack_store.core.adapters.repositories.base import BaseRepository
 from graintrack_store.core.utils import remove_ellipsis_fields
 from graintrack_store.orders.constants import OrderConstants
 from graintrack_store.orders.models import OrderProduct
@@ -70,7 +70,7 @@ class ProductRepository(BaseRepository):
 
     def list(self, filters: Dict[str, Any] = None) -> List[Product]:
         queryset = self.get_base_qs()
-        queryset = queryset.filter(available_quantity__gt=0)
+        queryset = queryset.filter(available_quantity__gt=0, is_deleted=False)
 
         if self.filterset and filters:
             filterset = self.filterset(filters, queryset)

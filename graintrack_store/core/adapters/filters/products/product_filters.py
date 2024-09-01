@@ -1,21 +1,13 @@
 from typing import List
 
-from django_filters import UUIDFilter, CharFilter, NumberFilter
+from django_filters import UUIDFilter, CharFilter, NumberFilter, DateTimeFilter
 from django_filters.rest_framework import FilterSet
 from rest_framework.exceptions import ValidationError
 
 from graintrack_store.products.models import Product, ProductCategory
 
 
-class ProductFilterSet(FilterSet):
-    category = UUIDFilter(method="filter_category")
-    name = CharFilter(lookup_expr="icontains")
-    price_min = NumberFilter(lookup_expr="gte", field_name="price")
-    price_max = NumberFilter(lookup_expr="lte", field_name="price")
-
-    class Meta:
-        model = Product
-        fields = ["category", "name", "price_min", "price_max"]
+class CategoryFilterMixin:
 
     def get_descendant_categories(
         self, parent_category: ProductCategory
@@ -42,10 +34,26 @@ class ProductFilterSet(FilterSet):
         return queryset.filter(category__in=categories)
 
 
-class SoldProductsReportFilterSet(FilterSet):
-    sold_at_min = NumberFilter(lookup_expr="gte", field_name="sold_at")
-    sold_at_max = NumberFilter(lookup_expr="lte", field_name="sold_at")
+class ProductFilterSet(CategoryFilterMixin, FilterSet):
+    name = CharFilter(lookup_expr="icontains")
+    price_min = NumberFilter(lookup_expr="gte", field_name="price")
+    price_max = NumberFilter(lookup_expr="lte", field_name="price")
+    category = UUIDFilter(method="filter_category")
 
     class Meta:
         model = Product
-        fields = ["sold_at_min", "sold_at_max"]
+        fields = ["name", "price_min", "price_max", "category"]
+
+
+class SoldProductsReportFilterSet(CategoryFilterMixin, FilterSet):
+    sold_at_min = DateTimeFilter(
+        lookup_expr="gte", field_name="order_products__order__sold_at"
+    )
+    sold_at_max = DateTimeFilter(
+        lookup_expr="lte", field_name="order_products__order__sold_at"
+    )
+    category = UUIDFilter(method="filter_category")
+
+    class Meta:
+        model = Product
+        fields = ["sold_at_min", "sold_at_max", "category"]
