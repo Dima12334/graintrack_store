@@ -12,6 +12,7 @@ from graintrack_store.api.v1.products.product_incomes.views import product_incom
 from graintrack_store.api.v1.products.products.views import (
     product_detail_view,
     product_view,
+    sold_products_report_view,
 )
 
 app_name = "products"
@@ -24,4 +25,5 @@ urlpatterns = [
     path("categories/<uuid:uuid>/", product_category_detail_view),
     path("discounts/", product_discount_view),
     path("discounts/<uuid:uuid>/", product_discount_detail_view),
+    path("reports/sold-products/", sold_products_report_view),
 ]

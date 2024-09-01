@@ -72,3 +72,16 @@ class ProductUpdateSerializer(BaseProjectModelSerializer):
     class Meta:
         model = Product
         fields = ("is_deleted", "name", "category_uuid", "price", "description")
+
+
+class CategoryNameAndProductsCountSerializer(drf_serializers.Serializer):
+    category_name = drf_serializers.CharField(read_only=True)
+    products_count = drf_serializers.IntegerField(read_only=True)
+
+
+class SoldProductsReportSerializer(drf_serializers.Serializer):
+    sold_products_with_discount_count = drf_serializers.IntegerField(read_only=True)
+    all_sold_products_count = drf_serializers.IntegerField(read_only=True)
+    sold_products_by_categories = drf_serializers.ListField(
+        child=CategoryNameAndProductsCountSerializer()
+    )

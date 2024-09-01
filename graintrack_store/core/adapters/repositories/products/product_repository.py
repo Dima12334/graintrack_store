@@ -2,19 +2,23 @@ from decimal import Decimal
 from types import EllipsisType
 from typing import List, Iterable, Dict, Any
 
-from django.db.models import F
+from django.db.models import F, Count, Q, Subquery, OuterRef
 
 from graintrack_store.core.adapters.filters.products.product_filters import (
     ProductFilterSet,
+    SoldProductsReportFilterSet,
 )
 from graintrack_store.core.adapters.repositories.base import BaseRepository, ModelType
 from graintrack_store.core.utils import remove_ellipsis_fields
+from graintrack_store.orders.constants import OrderConstants
+from graintrack_store.orders.models import OrderProduct
 from graintrack_store.products.models import Product
 
 
 class ProductRepository(BaseRepository):
     model = Product
     filterset = ProductFilterSet
+    sold_products_report_filterset = SoldProductsReportFilterSet
 
     def get_base_qs(self):
         return Product.objects.select_related("category").all()
@@ -94,3 +98,37 @@ class ProductRepository(BaseRepository):
         Product.objects.filter(id=product_id).update(
             available_quantity=F("available_quantity") - quantity
         )
+
+    def get_sold_products_report_data(
+        self, filters: Dict[str, Any] = None
+    ) -> Dict[str, Any]:
+        queryset = Product.objects.filter(
+            order_products__order__status=OrderConstants.STATUS_CHOICE.SOLD
+        )
+        if self.sold_products_report_filterset and filters:
+            filterset = self.sold_products_report_filterset(filters, queryset)
+            filterset.is_valid()
+            queryset = filterset.qs
+
+        order_products_with_discount_subquery = OrderProduct.objects.filter(
+            order__status=OrderConstants.STATUS_CHOICE.SOLD,
+            discount__gt=Decimal(0),
+            product_id=OuterRef("id"),
+        ).values_list("product_id", flat=True)
+
+        result = queryset.aggregate(
+            all_sold_products_count=Count("id", distinct=True),
+            sold_products_with_discount_count=Count(
+                "id",
+                filter=Q(id__in=Subquery(order_products_with_discount_subquery)),
+                distinct=True,
+            ),
+        )
+        sold_products_by_categories = list(
+            queryset.values(category_name=F("category__name")).annotate(
+                products_count=Count("category_name", distinct=True)
+            )
+        )
+        result["sold_products_by_categories"] = sold_products_by_categories
+
+        return result

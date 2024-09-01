@@ -16,6 +16,7 @@ class OrderGetSerializer(BaseProjectModelSerializer):
     created_at = drf_serializers.DateTimeField(read_only=True)
     creator = UserGetSerializer(read_only=True)
     status = drf_serializers.CharField(read_only=True)
+    sold_at = drf_serializers.DateTimeField(read_only=True, allow_null=True)
     order_code = drf_serializers.CharField(read_only=True)
     comment = drf_serializers.CharField(read_only=True)
     total_sum = drf_serializers.DecimalField(
@@ -29,6 +30,7 @@ class OrderGetSerializer(BaseProjectModelSerializer):
             "created_at",
             "creator",
             "status",
+            "sold_at",
             "order_code",
             "comment",
             "total_sum",

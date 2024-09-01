@@ -8,15 +8,19 @@ from rest_framework.generics import (
     UpdateAPIView,
     RetrieveAPIView,
 )
-
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 
 from graintrack_store.api.v1.products.products.serializers import (
     ProductGetSerializer,
     ProductCreateSerializer,
     ProductUpdateSerializer,
+    SoldProductsReportSerializer,
 )
 from graintrack_store.core.adapters.filters.products.product_filters import (
     ProductFilterSet,
+    SoldProductsReportFilterSet,
 )
 from graintrack_store.core.adapters.services.products.product_service import (
     ProductService,
@@ -84,3 +88,20 @@ class ProductDetailView(
 
 
 product_detail_view = ProductDetailView.as_view()
+
+
+class SoldProductsReportView(ProjectGenericAPIView):
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = SoldProductsReportFilterSet
+
+    service = ProductService()
+    serializer_class = SoldProductsReportSerializer
+
+    def get(self, request: Request, *args, **kwargs) -> Response:
+        filters = request.query_params.copy()
+        report_data = self.service.get_sold_products_report_data(filters=filters)
+        serializer = self.serializer_class(report_data)
+        return Response(serializer.data, status=HTTP_200_OK)
+
+
+sold_products_report_view = SoldProductsReportView.as_view()

@@ -40,3 +40,12 @@ class ProductFilterSet(FilterSet):
         categories = [parent_category, *descendant_categories]
 
         return queryset.filter(category__in=categories)
+
+
+class SoldProductsReportFilterSet(FilterSet):
+    sold_at_min = NumberFilter(lookup_expr="gte", field_name="sold_at")
+    sold_at_max = NumberFilter(lookup_expr="lte", field_name="sold_at")
+
+    class Meta:
+        model = Product
+        fields = ["sold_at_min", "sold_at_max"]

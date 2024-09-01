@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 
@@ -22,3 +23,4 @@ class OrderCreateSchema(BaseModel):
 class OrderUpdateSchema(BaseModel):
     status: Optional[str] = Field(max_length=OrderConstants.STATUS_MAX_LENGTH)
     comment: Optional[str] = Field(max_length=OrderConstants.COMMENT_MAX_LENGTH)
+    sold_at: Optional[datetime]

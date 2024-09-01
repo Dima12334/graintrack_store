@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 from types import EllipsisType
 from typing import Dict, Any, List
@@ -41,11 +42,13 @@ class OrderRepository(BaseRepository):
         status: str | EllipsisType = ...,
         comment: str | EllipsisType = ...,
         total_sum: Decimal | EllipsisType = ...,
+        sold_at: datetime | EllipsisType = ...,
     ) -> Order:
         data = {
             "status": status,
             "comment": comment,
             "total_sum": total_sum,
+            "sold_at": sold_at,
         }
         data = remove_ellipsis_fields(data)
 

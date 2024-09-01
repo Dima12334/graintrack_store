@@ -9,6 +9,8 @@ from rest_framework.generics import (
     RetrieveAPIView,
     DestroyAPIView,
 )
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 
 from graintrack_store.api.v1.orders.order_products.serializers import (
     OrderProductUpdateSerializer,
@@ -55,6 +57,13 @@ class OrderProductView(
 
     def create_object(self, validated_data: Dict[str, Any]) -> OrderProduct:
         return self.service.create_order_product(**validated_data)
+
+    def list(self, request, *args, **kwargs) -> Response:
+        filters = request.query_params.copy()
+        instances = self.service.list_order_products(user=request.user, filters=filters)
+
+        serializer = self.serializer_class(instances, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
 
 
 order_product_view = OrderProductView.as_view()

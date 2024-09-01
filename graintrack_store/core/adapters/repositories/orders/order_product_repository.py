@@ -10,7 +10,9 @@ from graintrack_store.core.adapters.filters.orders.order_product_filters import 
 )
 from graintrack_store.core.adapters.repositories.base import BaseRepository
 from graintrack_store.core.utils import remove_ellipsis_fields
+from graintrack_store.orders.constants import OrderConstants
 from graintrack_store.orders.models import OrderProduct
+from graintrack_store.users.models import User
 
 
 class OrderProductRepository(BaseRepository):
@@ -69,6 +71,22 @@ class OrderProductRepository(BaseRepository):
     def list(self, filters: Dict[str, Any] = None) -> List[OrderProduct]:
         queryset = self.get_base_qs()
         queryset = queryset.annotate(price_with_discount=F("price") - F("discount"))
+
+        if self.filterset and filters:
+            filterset = self.filterset(filters, queryset)
+            filterset.is_valid()
+            queryset = filterset.qs
+        queryset = queryset.order_by(self.default_ordering)
+
+        return list(queryset)
+
+    def list_by_order_creator(
+        self, creator: User, filters: Dict[str, Any] = None
+    ) -> List[OrderProduct]:
+        queryset = self.get_base_qs()
+        queryset = queryset.filter(order__creator=creator).annotate(
+            price_with_discount=F("price") - F("discount")
+        )
 
         if self.filterset and filters:
             filterset = self.filterset(filters, queryset)

@@ -1,5 +1,6 @@
 from types import EllipsisType
 
+from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
 from graintrack_store.core.adapters.repositories.orders.order_product_repository import (
@@ -83,6 +84,7 @@ class OrderValidator(BaseValidator):
                 raise ValidationError(
                     f"You cannot change order status to {schema.status} without specified products in order."
                 )
+            schema.sold_at = timezone.now()
 
         return schema
 

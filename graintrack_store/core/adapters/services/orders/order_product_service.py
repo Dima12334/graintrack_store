@@ -1,5 +1,6 @@
 from decimal import Decimal
 from types import EllipsisType
+from typing import Dict, Any, List
 from uuid import UUID
 
 from django.db import transaction
@@ -23,6 +24,8 @@ from graintrack_store.core.adapters.validators.orders.order_product_validator im
 )
 from graintrack_store.core.constants import DECIMAL_PLACES
 from graintrack_store.orders.models import OrderProduct
+from graintrack_store.users.constants import UserConstants
+from graintrack_store.users.models import User
 
 
 class OrderProductService(BaseService):
@@ -147,3 +150,14 @@ class OrderProductService(BaseService):
             deleted = self.order_product_repository.delete(instance_uuid=instance_uuid)
             if not deleted:
                 raise ValidationError("Failed to delete order product.")
+
+    def list_order_products(
+        self, user: User, filters: Dict[str, Any] = None
+    ) -> List[OrderProduct]:
+        if user.role == UserConstants.ROLE_CHOICE.MODERATOR:
+            orders = self.order_product_repository.list(filters=filters)
+        else:
+            orders = self.order_product_repository.list_by_order_creator(
+                creator=user, filters=filters
+            )
+        return orders

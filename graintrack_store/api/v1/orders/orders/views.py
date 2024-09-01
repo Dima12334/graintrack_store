@@ -9,7 +9,8 @@ from rest_framework.generics import (
     RetrieveAPIView,
     DestroyAPIView,
 )
-from rest_framework.mixins import DestroyModelMixin
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 
 from graintrack_store.api.v1.orders.orders.serializers import (
     OrderGetSerializer,
@@ -52,6 +53,13 @@ class OrderView(
 
     def create_object(self, validated_data: Dict[str, Any]) -> Order:
         return self.service.create_order(creator=self.request.user, **validated_data)
+
+    def list(self, request, *args, **kwargs) -> Response:
+        filters = request.query_params.copy()
+        instances = self.service.list_orders(user=request.user, filters=filters)
+
+        serializer = self.serializer_class(instances, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
 
 
 order_view = OrderView.as_view()

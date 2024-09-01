@@ -15,6 +15,7 @@ class Order(BaseModel):
         max_length=OrderConstants.STATUS_MAX_LENGTH,
         choices=OrderConstants.STATUS_CHOICE,
     )
+    sold_at = models.DateTimeField(null=True, default=None)
     order_code = models.CharField(
         max_length=OrderConstants.ORDER_CODE_MAX_LENGTH, unique=True
     )

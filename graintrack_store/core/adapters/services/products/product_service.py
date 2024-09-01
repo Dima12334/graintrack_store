@@ -1,5 +1,6 @@
 from decimal import Decimal
 from types import EllipsisType
+from typing import Dict, Any
 from uuid import UUID
 
 from django.db import transaction
@@ -16,6 +17,8 @@ from graintrack_store.core.adapters.validators.products.product_validator import
     ProductValidator,
 )
 from graintrack_store.products.models import Product
+from graintrack_store.users.constants import UserConstants
+from graintrack_store.users.models import User
 
 
 class ProductService(BaseService):
@@ -77,3 +80,9 @@ class ProductService(BaseService):
                 instance, **validated_data.dict(exclude_unset=True)
             )
         return product
+
+    def get_sold_products_report_data(self, filters: Dict[Any, Any]) -> Dict[str, Any]:
+        report_data = self.product_repository.get_sold_products_report_data(
+            filters=filters
+        )
+        return report_data
