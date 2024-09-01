@@ -14,7 +14,7 @@ class LoginSerializer(drf_serializers.Serializer):
     )
 
 
-class UserSerializer(BaseProjectModelSerializer):
+class UserGetSerializer(BaseProjectModelSerializer):
     uuid = drf_serializers.UUIDField(read_only=True)
     username = drf_serializers.CharField(read_only=True)
     role = drf_serializers.CharField(read_only=True)

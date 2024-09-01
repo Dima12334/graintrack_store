@@ -14,7 +14,12 @@ class OrderProductRepository(BaseRepository):
     filterset = OrderProductFilterSet
 
     def get_base_qs(self):
-        return OrderProduct.objects.select_related("order", "product").all()
+        return OrderProduct.objects.select_related(
+            "order",
+            "order__creator",
+            "product",
+            "product__category",
+        ).all()
 
     def create(
         self,

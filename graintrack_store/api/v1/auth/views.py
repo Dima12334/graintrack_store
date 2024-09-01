@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from graintrack_store.api.v1.auth.serializers import (
     LoginSerializer,
-    UserSerializer,
+    UserGetSerializer,
     LogoutSerializer,
 )
 from graintrack_store.core.api.views import ProjectGenericAPIView
@@ -28,7 +28,7 @@ class LoginAPIView(APIView):
         if user is not None:
             auth.login(user=user, request=request)
             context = {"request": request}
-            serializer = UserSerializer(user, context=context)
+            serializer = UserGetSerializer(user, context=context)
             return Response(serializer.data)
         raise ValidationError("Log in failure. Please check your credentials")
 
