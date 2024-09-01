@@ -40,7 +40,7 @@ class ProductCategoryCreateSerializer(BaseProjectModelSerializer):
         allow_blank=True,
         max_length=ProductCategoryConstants.DESCRIPTION_MAX_LENGTH,
     )
-    parent_category_uuid = drf_serializers.UUIDField(required=False)
+    parent_category_uuid = drf_serializers.UUIDField(required=False, allow_null=True)
 
     class Meta:
         model = ProductCategory
