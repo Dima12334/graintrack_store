@@ -14,10 +14,12 @@ from graintrack_store.core.adapters.schemas.products.product_discount_schemas im
 )
 from uuid import UUID
 
+from graintrack_store.core.adapters.validators.base import BaseValidator
 from graintrack_store.core.utils import remove_ellipsis_fields
+from pydantic import ValidationError as PydanticValidationError
 
 
-class ProductDiscountValidator:
+class ProductDiscountValidator(BaseValidator):
     product_repository: ProductRepository
 
     def __init__(self, product_repository: ProductRepository):
@@ -38,7 +40,11 @@ class ProductDiscountValidator:
             "discount_percentage": discount_percentage,
             "is_active": is_active,
         }
-        schema = ProductDiscountCreateInSchema(**data)
+        try:
+            schema = ProductDiscountCreateInSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         product = self.product_repository.retrieve_by_uuid(
             instance_uuid=schema.product_uuid
@@ -65,6 +71,10 @@ class ProductDiscountValidator:
             "is_active": is_active,
         }
         data = remove_ellipsis_fields(data)
-        schema = ProductDiscountUpdateSchema(**data)
+        try:
+            schema = ProductDiscountUpdateSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         return schema

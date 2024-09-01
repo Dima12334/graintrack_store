@@ -9,8 +9,11 @@ from graintrack_store.core.adapters.schemas.products.product_income_schemas impo
 )
 from uuid import UUID
 
+from graintrack_store.core.adapters.validators.base import BaseValidator
+from pydantic import ValidationError as PydanticValidationError
 
-class ProductIncomeValidator:
+
+class ProductIncomeValidator(BaseValidator):
 
     product_repository: ProductRepository
 
@@ -21,7 +24,11 @@ class ProductIncomeValidator:
         self, product_uuid: UUID, quantity: int
     ) -> ProductIncomeCreateOutSchema:
         data = {"product_uuid": product_uuid, "quantity": quantity}
-        schema = ProductIncomeCreateInSchema(**data)
+        try:
+            schema = ProductIncomeCreateInSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         product = self.product_repository.retrieve_by_uuid(
             instance_uuid=schema.product_uuid

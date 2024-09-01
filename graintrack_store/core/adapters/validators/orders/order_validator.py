@@ -12,12 +12,14 @@ from graintrack_store.core.adapters.schemas.orders.order_schemas import (
     OrderCreateSchema,
     OrderUpdateSchema,
 )
+from graintrack_store.core.adapters.validators.base import BaseValidator
 from graintrack_store.core.utils import remove_ellipsis_fields
 from graintrack_store.orders.constants import OrderConstants
 from graintrack_store.orders.models import Order
+from pydantic import ValidationError as PydanticValidationError
 
 
-class OrderValidator:
+class OrderValidator(BaseValidator):
     order_repository: OrderRepository
     order_product_repository: OrderProductRepository
 
@@ -40,7 +42,11 @@ class OrderValidator:
             "order_code": order_code,
             "comment": comment,
         }
-        schema = OrderCreateSchema(**data)
+        try:
+            schema = OrderCreateSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         order_already_exists = self.order_repository.check_existence_by_order_code(
             order_code=schema.order_code
@@ -63,7 +69,11 @@ class OrderValidator:
             "comment": comment,
         }
         data = remove_ellipsis_fields(data)
-        schema = OrderUpdateSchema(**data)
+        try:
+            schema = OrderUpdateSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         if schema.status and schema.status == OrderConstants.STATUS_CHOICE.SOLD:
             order_products = self.order_product_repository.list(

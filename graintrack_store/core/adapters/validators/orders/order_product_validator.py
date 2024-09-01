@@ -1,7 +1,6 @@
 from decimal import Decimal
 from types import EllipsisType
-
-from django.conf.locale.bg.formats import DECIMAL_SEPARATOR
+from pydantic import ValidationError as PydanticValidationError
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
@@ -24,11 +23,12 @@ from graintrack_store.core.adapters.schemas.orders.order_product_schemas import 
 )
 from uuid import UUID
 
+from graintrack_store.core.adapters.validators.base import BaseValidator
 from graintrack_store.core.constants import DECIMAL_PLACES
 from graintrack_store.core.utils import remove_ellipsis_fields
 
 
-class OrderProductValidator:
+class OrderProductValidator(BaseValidator):
     order_repository: OrderRepository
     product_repository: ProductRepository
     product_discount_repository: ProductDiscountRepository
@@ -56,7 +56,11 @@ class OrderProductValidator:
             "product_uuid": product_uuid,
             "quantity": quantity,
         }
-        schema = OrderProductCreateInSchema(**data)
+        try:
+            schema = OrderProductCreateInSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         order = self.order_repository.retrieve_by_uuid(instance_uuid=schema.order_uuid)
         if not order:
@@ -117,6 +121,10 @@ class OrderProductValidator:
             "quantity": quantity,
         }
         data = remove_ellipsis_fields(data)
-        schema = OrderProductUpdateSchema(**data)
+        try:
+            schema = OrderProductUpdateSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         return schema

@@ -13,10 +13,12 @@ from graintrack_store.core.adapters.schemas.products.product_category_schemas im
 )
 from uuid import UUID
 
+from graintrack_store.core.adapters.validators.base import BaseValidator
 from graintrack_store.core.utils import remove_ellipsis_fields
+from pydantic import ValidationError as PydanticValidationError
 
 
-class ProductCategoryValidator:
+class ProductCategoryValidator(BaseValidator):
     product_category_repository: ProductCategoryRepository
 
     def __init__(self, product_category_repository: ProductCategoryRepository):
@@ -33,7 +35,11 @@ class ProductCategoryValidator:
             "name": name,
             "description": description,
         }
-        schema = ProductCategoryCreateInSchema(**data)
+        try:
+            schema = ProductCategoryCreateInSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         if schema.parent_category_uuid:
             parent_category = self.product_category_repository.retrieve_by_uuid(
@@ -63,6 +69,10 @@ class ProductCategoryValidator:
             "description": description,
         }
         data = remove_ellipsis_fields(data)
-        schema = ProductCategoryUpdateSchema(**data)
+        try:
+            schema = ProductCategoryUpdateSchema(**data)
+        except PydanticValidationError as ex:
+            errors = self.parse_pydantic_validation_error(ex)
+            raise ValidationError(errors)
 
         return schema
