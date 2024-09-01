@@ -25,10 +25,8 @@ docker-compose exec app python manage.py migrate
 docker-compose exec app python manage.py createsuperuser
 ```
 or if you loaded db dump, you can use existing user:
-```
-username: admin
-password: qwerty
-```
+* **username**: ```admin```
+* **password**: ```qwerty```
 6. Done. Use the App.
 
 You can find swagger documentation for API at this url http://127.0.0.1:8000/api/docs/
@@ -58,7 +56,8 @@ API entry point: http://127.0.0.1:8000/api/v1/
 
 ---
 ## Order products
-Used to link products to order.
+*  **Used to link products to order.**
+
 ### `/orders/products/`
 - Implemented methods: GET, POST
 
@@ -86,13 +85,13 @@ Used to link products to order.
 
 ---
 ## Product incomes
-Used to increase product available quantity.
+* **Used to increase product available quantity.**
 ### `/products/incomes/`
 - Implemented methods: GET, POST
 
 ---
 ## Product discounts
-Used to activate or deactivate discount on product.
+* **Used to activate or deactivate discount on product.**
 ### `/products/discounts/`
 - Implemented methods: GET, POST
 
