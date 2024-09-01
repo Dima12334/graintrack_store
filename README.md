@@ -14,7 +14,7 @@ docker-compose up --build
 ```
 3. Load db dump (optional):
 ```
-docker-compose exec db psql -U postgres -d graintrack_store < dump_db.sql
+docker-compose exec -T db psql -U postgres -d graintrack_store < dump_db.sql
 ```
 4. If you didn't load dumb, you need to apply django migrations by this command:
 ```
