@@ -36,7 +36,7 @@ class ProductCategoryRepository(BaseRepository):
         }
         data = remove_ellipsis_fields(data)
 
-        for field, value in data:
+        for field, value in data.items():
             setattr(instance, field, value)
 
         instance.save()

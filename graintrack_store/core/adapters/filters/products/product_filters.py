@@ -15,7 +15,7 @@ class ProductFilterSet(FilterSet):
 
     class Meta:
         model = Product
-        field = ["category", "name", "price_min", "price_max"]
+        fields = ["category", "name", "price_min", "price_max"]
 
     def get_descendant_categories(
         self, parent_category: ProductCategory

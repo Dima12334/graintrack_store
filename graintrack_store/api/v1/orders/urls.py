@@ -10,7 +10,7 @@ app_name = "orders"
 
 urlpatterns = [
     path("", order_view),
-    path("<uuid_hex:uuid>/", order_detail_view),
+    path("<uuid:uuid>/", order_detail_view),
     path("products/", order_product_view),
-    path("products/<uuid_hex:uuid>/", order_product_detail_view),
+    path("products/<uuid:uuid>/", order_product_detail_view),
 ]

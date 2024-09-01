@@ -13,7 +13,7 @@ class OrderFilterSet(FilterSet):
 
     class Meta:
         model = Order
-        field = [
+        fields = [
             "status",
             "created_at_min",
             "created_at_max",

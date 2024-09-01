@@ -11,4 +11,4 @@ class ProductDiscountFilterSet(FilterSet):
 
     class Meta:
         model = ProductDiscount
-        field = ["discount_started_at", "discount_ended_at", "is_active"]
+        fields = ["discount_started_at", "discount_ended_at", "is_active"]

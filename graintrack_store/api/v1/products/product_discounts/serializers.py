@@ -41,7 +41,7 @@ class ProductDiscountGetSerializer(BaseProjectModelSerializer):
 
 
 class ProductDiscountCreateSerializer(BaseProjectModelSerializer):
-    product = drf_serializers.UUIDField(required=True)
+    product_uuid = drf_serializers.UUIDField(required=True)
     discount_started_at = drf_serializers.DateTimeField(required=True)
     discount_ended_at = drf_serializers.DateTimeField(required=True)
     discount_percentage = drf_serializers.DecimalField(
@@ -53,7 +53,7 @@ class ProductDiscountCreateSerializer(BaseProjectModelSerializer):
     class Meta:
         model = ProductDiscount
         fields = (
-            "product",
+            "product_uuid",
             "discount_started_at",
             "discount_ended_at",
             "discount_percentage",

@@ -18,10 +18,10 @@ app_name = "products"
 
 urlpatterns = [
     path("", product_view),
-    path("<uuid_hex:uuid>/", product_detail_view),
+    path("<uuid:uuid>/", product_detail_view),
     path("incomes/", product_income_view),
     path("categories/", product_category_view),
-    path("categories/<uuid_hex:uuid>/", product_category_detail_view),
+    path("categories/<uuid:uuid>/", product_category_detail_view),
     path("discounts/", product_discount_view),
-    path("discounts/<uuid_hex:uuid>/", product_discount_detail_view),
+    path("discounts/<uuid:uuid>/", product_discount_detail_view),
 ]

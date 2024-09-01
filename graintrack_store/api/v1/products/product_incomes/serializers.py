@@ -16,9 +16,9 @@ class ProductIncomeGetSerializer(BaseProjectModelSerializer):
 
 
 class ProductIncomeCreateSerializer(BaseProjectModelSerializer):
-    product = drf_serializers.UUIDField(required=True)
+    product_uuid = drf_serializers.UUIDField(required=True)
     quantity = drf_serializers.IntegerField(required=True)
 
     class Meta:
         model = ProductIncome
-        fields = ("product", "quantity")
+        fields = ("product_uuid", "quantity")

@@ -31,9 +31,12 @@ class ProjectGenericAPIView(GenericAPIView):
 class ProjectListModelMixin(ListModelMixin):
     service: BaseService = None
 
-    def list(self, request, *args, **kwargs) -> List[ModelType]:
+    def list(self, request, *args, **kwargs) -> Response:
         filters = request.query_params.copy()
-        return self.service.list(filters=filters)
+        instances = self.service.list(filters=filters)
+
+        serializer = self.serializer_class(instances, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
 
 
 class ProjectUpdateModelMixin(UpdateModelMixin):

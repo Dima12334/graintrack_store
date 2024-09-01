@@ -51,7 +51,7 @@ class OrderView(
         return __.get(self.request.method, default)
 
     def create_object(self, validated_data: Dict[str, Any]) -> Order:
-        return self.service.create_order(**validated_data)
+        return self.service.create_order(creator=self.request.user, **validated_data)
 
 
 order_view = OrderView.as_view()

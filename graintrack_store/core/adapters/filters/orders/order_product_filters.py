@@ -10,4 +10,4 @@ class OrderProductFilterSet(FilterSet):
 
     class Meta:
         model = OrderProduct
-        field = ["order", "product"]
+        fields = ["order", "product"]

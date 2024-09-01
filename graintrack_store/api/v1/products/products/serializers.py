@@ -38,7 +38,7 @@ class ProductCreateSerializer(BaseProjectModelSerializer):
     name = drf_serializers.CharField(
         required=True, max_length=ProductConstants.NAME_MAX_LENGTH
     )
-    category = drf_serializers.UUIDField(required=True)
+    category_uuid = drf_serializers.UUIDField(required=True)
     price = drf_serializers.DecimalField(
         required=True, max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES
     )
@@ -51,7 +51,7 @@ class ProductCreateSerializer(BaseProjectModelSerializer):
 
     class Meta:
         model = Product
-        fields = ("name", "category", "price", "description")
+        fields = ("name", "category_uuid", "price", "description")
 
 
 class ProductUpdateSerializer(BaseProjectModelSerializer):
@@ -59,7 +59,7 @@ class ProductUpdateSerializer(BaseProjectModelSerializer):
     name = drf_serializers.CharField(
         required=False, max_length=ProductConstants.NAME_MAX_LENGTH
     )
-    category = drf_serializers.UUIDField(required=False)
+    category_uuid = drf_serializers.UUIDField(required=False)
     price = drf_serializers.DecimalField(
         required=False, max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES
     )
@@ -71,4 +71,4 @@ class ProductUpdateSerializer(BaseProjectModelSerializer):
 
     class Meta:
         model = Product
-        fields = ("is_deleted", "name", "category", "price", "description")
+        fields = ("is_deleted", "name", "category_uuid", "price", "description")

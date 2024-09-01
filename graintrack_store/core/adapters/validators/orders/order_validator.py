@@ -2,6 +2,9 @@ from types import EllipsisType
 
 from rest_framework.exceptions import ValidationError
 
+from graintrack_store.core.adapters.repositories.orders.order_product_repository import (
+    OrderProductRepository,
+)
 from graintrack_store.core.adapters.repositories.orders.order_repository import (
     OrderRepository,
 )
@@ -16,9 +19,15 @@ from graintrack_store.orders.models import Order
 
 class OrderValidator:
     order_repository: OrderRepository
+    order_product_repository: OrderProductRepository
 
-    def __init__(self, order_repository: OrderRepository):
+    def __init__(
+        self,
+        order_repository: OrderRepository,
+        order_product_repository: OrderProductRepository,
+    ):
         self.order_repository = order_repository
+        self.order_product_repository = order_product_repository
 
     def validate_create(
         self,
@@ -45,6 +54,7 @@ class OrderValidator:
 
     def validate_update(
         self,
+        instance: Order,
         status: str | EllipsisType = ...,
         comment: str | EllipsisType = ...,
     ) -> OrderUpdateSchema:
@@ -54,6 +64,16 @@ class OrderValidator:
         }
         data = remove_ellipsis_fields(data)
         schema = OrderUpdateSchema(**data)
+
+        if schema.status and schema.status == OrderConstants.STATUS_CHOICE.SOLD:
+            order_products = self.order_product_repository.list(
+                filters={"order": instance.uuid}
+            )
+            if not order_products:
+                raise ValidationError(
+                    f"You cannot change order status to {schema.status} without specified products in order."
+                )
+
         return schema
 
     def validate_delete(self, instance: Order) -> None:

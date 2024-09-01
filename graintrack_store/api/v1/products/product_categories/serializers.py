@@ -4,7 +4,7 @@ from graintrack_store.products.models import Product, ProductCategory
 from rest_framework import serializers as drf_serializers
 
 
-class ProductCategoryGetSerializer(BaseProjectModelSerializer):
+class ProductCategoryGetWithoutParentSerializer(BaseProjectModelSerializer):
     uuid = drf_serializers.UUIDField(read_only=True)
     created_at = drf_serializers.DateTimeField(read_only=True)
     name = drf_serializers.CharField(read_only=True)
@@ -18,6 +18,18 @@ class ProductCategoryGetSerializer(BaseProjectModelSerializer):
         fields = ("uuid", "created_at", "name", "description", "parent_category_uuid")
 
 
+class ProductCategoryGetSerializer(BaseProjectModelSerializer):
+    uuid = drf_serializers.UUIDField(read_only=True)
+    created_at = drf_serializers.DateTimeField(read_only=True)
+    name = drf_serializers.CharField(read_only=True)
+    description = drf_serializers.CharField(read_only=True)
+    parent_category = ProductCategoryGetWithoutParentSerializer(read_only=True)
+
+    class Meta:
+        model = ProductCategory
+        fields = ("uuid", "created_at", "name", "description", "parent_category")
+
+
 class ProductCategoryCreateSerializer(BaseProjectModelSerializer):
     name = drf_serializers.CharField(
         required=True, max_length=ProductCategoryConstants.NAME_MAX_LENGTH
@@ -28,11 +40,11 @@ class ProductCategoryCreateSerializer(BaseProjectModelSerializer):
         allow_blank=True,
         max_length=ProductCategoryConstants.DESCRIPTION_MAX_LENGTH,
     )
-    parent_category = drf_serializers.UUIDField(required=False, allow_null=True)
+    parent_category_uuid = drf_serializers.UUIDField(required=False)
 
     class Meta:
         model = ProductCategory
-        fields = ("name", "description", "parent_category")
+        fields = ("name", "description", "parent_category_uuid")
 
 
 class ProductCategoryUpdateSerializer(BaseProjectModelSerializer):

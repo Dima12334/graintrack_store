@@ -15,6 +15,11 @@ class OrderProductGetSerializer(BaseProjectModelSerializer):
     price = drf_serializers.DecimalField(
         read_only=True, max_digits=DECIMAL_MAX_DIGITS, decimal_places=DECIMAL_PLACES
     )
+    price_with_discount = drf_serializers.DecimalField(
+        read_only=True,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_PLACES,
+    )
     discount = drf_serializers.DecimalField(
         read_only=True,
         max_digits=DECIMAL_MAX_DIGITS,
@@ -30,18 +35,19 @@ class OrderProductGetSerializer(BaseProjectModelSerializer):
             "product",
             "quantity",
             "price",
+            "price_with_discount",
             "discount",
         )
 
 
 class OrderProductCreateSerializer(BaseProjectModelSerializer):
-    order = drf_serializers.UUIDField(required=True)
-    product = drf_serializers.UUIDField(required=True)
+    order_uuid = drf_serializers.UUIDField(required=True)
+    product_uuid = drf_serializers.UUIDField(required=True)
     quantity = drf_serializers.IntegerField(required=True)
 
     class Meta:
         model = OrderProduct
-        fields = ("order", "product", "quantity")
+        fields = ("order_uuid", "product_uuid", "quantity")
 
 
 class OrderProductUpdateSerializer(BaseProjectModelSerializer):

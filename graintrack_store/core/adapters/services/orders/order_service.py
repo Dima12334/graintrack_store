@@ -36,7 +36,10 @@ class OrderService(BaseService):
         self.order_product_repository = OrderProductRepository()
         self.product_repository = ProductRepository()
 
-        self.order_validator = OrderValidator(order_repository=self.order_repository)
+        self.order_validator = OrderValidator(
+            order_repository=self.order_repository,
+            order_product_repository=self.order_product_repository,
+        )
 
     def create_order(
         self,
@@ -69,7 +72,7 @@ class OrderService(BaseService):
                 raise NotFound("Order object not found")
 
             validated_data = self.order_validator.validate_update(
-                status=status, comment=comment
+                instance=instance, status=status, comment=comment
             )
             order = self.order_repository.update(
                 instance, **validated_data.dict(exclude_unset=True)

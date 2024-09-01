@@ -21,7 +21,7 @@ class OrderRepository(BaseRepository):
         creator_id: int,
         status: str,
         order_code: str,
-        total_sum: Decimal,
+        total_sum: Decimal = Decimal(0),
         comment: str = "",
     ) -> Order:
         data = {
@@ -49,7 +49,7 @@ class OrderRepository(BaseRepository):
         }
         data = remove_ellipsis_fields(data)
 
-        for field, value in data:
+        for field, value in data.items():
             setattr(instance, field, value)
 
         instance.save()

@@ -76,6 +76,10 @@ class OrderProductService(BaseService):
             self.product_repository.decrease_available_quantity(
                 product_id=order_product.product_id, quantity=order_product.quantity
             )
+
+            order_product.price_with_discount = (
+                order_product.price - order_product.discount
+            )
         return order_product
 
     def update_order_product(
@@ -122,7 +126,7 @@ class OrderProductService(BaseService):
 
     def delete_order_product(self, instance_uuid: UUID) -> None:
         with transaction.atomic():
-            instance = self.order_repository.retrieve_by_uuid(
+            instance = self.order_product_repository.retrieve_by_uuid(
                 instance_uuid=instance_uuid
             )
             if not instance:

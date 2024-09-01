@@ -1,8 +1,9 @@
 from decimal import Decimal
 from types import EllipsisType
 
+from django.conf.locale.bg.formats import DECIMAL_SEPARATOR
 from django.utils import timezone
-from pydantic import ValidationError
+from rest_framework.exceptions import ValidationError
 
 from graintrack_store.core.adapters.repositories.orders.order_product_repository import (
     OrderProductRepository,
@@ -23,6 +24,7 @@ from graintrack_store.core.adapters.schemas.orders.order_product_schemas import 
 )
 from uuid import UUID
 
+from graintrack_store.core.constants import DECIMAL_PLACES
 from graintrack_store.core.utils import remove_ellipsis_fields
 
 
@@ -77,7 +79,7 @@ class OrderProductValidator:
 
         if product.available_quantity < schema.quantity:
             raise ValidationError(
-                f"Product available quantity less than specified quantity ({product.available_quantity}<{schema.quantity})."
+                f"Product available quantity less than specified quantity ({product.available_quantity} < {schema.quantity})."
             )
 
         product_discount = (
@@ -92,9 +94,11 @@ class OrderProductValidator:
             <= timezone.now()
             <= product_discount.discount_ended_at
         ):
-            discount = (
-                product_discount.discount_percentage / Decimal("100.0")
-            ) * product.price
+            discount = round(
+                (product_discount.discount_percentage / Decimal("100.0"))
+                * product.price,
+                DECIMAL_PLACES,
+            )
         else:
             discount = Decimal(0)
 
