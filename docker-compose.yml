@@ -4,7 +4,6 @@ services:
   app:
     build: .
     container_name: graintrack_store_app
-    restart: always
     ports:
       - "8000:8000"
     depends_on:
@@ -13,7 +12,6 @@ services:
   db:
     image: postgres:14
     container_name: graintrack_store_postgres
-    restart: always
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
