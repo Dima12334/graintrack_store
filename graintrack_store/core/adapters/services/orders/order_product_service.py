@@ -55,7 +55,7 @@ class OrderProductService(BaseService):
         quantity: int,
     ) -> OrderProduct:
         with transaction.atomic():
-            validated_data = self.order_product_validator.validate_create(
+            validated_data = self.order_product_validator.validate_create_order_product(
                 order_uuid=order_uuid,
                 product_uuid=product_uuid,
                 quantity=quantity,
@@ -95,7 +95,7 @@ class OrderProductService(BaseService):
             if not instance:
                 raise NotFound("Order product object not found")
 
-            validated_data = self.order_product_validator.validate_update(
+            validated_data = self.order_product_validator.validate_update_order_product(
                 quantity=quantity,
             )
             order = self.order_repository.retrieve_by_id(instance_id=instance.order_id)
@@ -152,9 +152,7 @@ class OrderProductService(BaseService):
             if not deleted:
                 raise ValidationError("Failed to delete order product.")
 
-    def list_order_products(
-        self, user: User, filters: Dict[str, Any] = None
-    ) -> List[OrderProduct]:
+    def list(self, user: User, filters: Dict[str, Any] = None) -> List[OrderProduct]:
         if user.role == UserConstants.ROLE_CHOICE.MODERATOR:
             order_products = self.order_product_repository.list(filters=filters)
         else:

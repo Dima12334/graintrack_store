@@ -14,18 +14,21 @@ from graintrack_store.core.adapters.schemas.products.product_discount_schemas im
 )
 from uuid import UUID
 
-from graintrack_store.core.adapters.validators.base import BaseValidator
+from graintrack_store.core.adapters.validators.base import (
+    BaseValidator,
+    ProductValidationMixin,
+)
 from graintrack_store.core.utils import remove_ellipsis_fields
 from pydantic import ValidationError as PydanticValidationError
 
 
-class ProductDiscountValidator(BaseValidator):
+class ProductDiscountValidator(ProductValidationMixin, BaseValidator):
     product_repository: ProductRepository
 
     def __init__(self, product_repository: ProductRepository):
         self.product_repository = product_repository
 
-    def validate_create(
+    def validate_create_product_discount(
         self,
         product_uuid: UUID,
         discount_started_at: datetime,
@@ -46,18 +49,14 @@ class ProductDiscountValidator(BaseValidator):
             errors = self.parse_pydantic_validation_error(ex)
             raise ValidationError(errors)
 
-        product = self.product_repository.retrieve_by_uuid(
-            instance_uuid=schema.product_uuid
-        )
-        if not product:
-            raise ValidationError(f"Product with uuid {schema.product_uuid} not found.")
+        product = self.validate_product(product_uuid=schema.product_uuid)
 
         out_data = schema.dict(exclude_unset=True)
         out_data["product_id"] = product.id
 
         return ProductDiscountCreateOutSchema(**out_data)
 
-    def validate_update(
+    def validate_update_product_discount(
         self,
         discount_started_at: datetime | EllipsisType = ...,
         discount_ended_at: datetime | EllipsisType = ...,

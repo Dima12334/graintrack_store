@@ -34,10 +34,12 @@ class ProductCategoryService(BaseService):
         parent_category_uuid: Optional[UUID] = None,
     ) -> ProductCategory:
         with transaction.atomic():
-            validated_data = self.product_category_validator.validate_create(
-                name=name,
-                description=description,
-                parent_category_uuid=parent_category_uuid,
+            validated_data = (
+                self.product_category_validator.validate_create_product_category(
+                    name=name,
+                    description=description,
+                    parent_category_uuid=parent_category_uuid,
+                )
             )
             parent_category = self.product_category_repository.create(
                 **validated_data.dict(exclude_unset=True)
@@ -57,8 +59,10 @@ class ProductCategoryService(BaseService):
             if not instance:
                 raise NotFound("Product category object not found")
 
-            validated_data = self.product_category_validator.validate_update(
-                name=name, description=description
+            validated_data = (
+                self.product_category_validator.validate_update_product_category(
+                    name=name, description=description
+                )
             )
             product_category = self.product_category_repository.update(
                 instance, **validated_data.dict(exclude_unset=True)

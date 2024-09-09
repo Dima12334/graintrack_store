@@ -10,7 +10,6 @@ from graintrack_store.core.adapters.filters.orders.order_product_filters import 
 )
 from graintrack_store.core.adapters.repositories.base import BaseRepository
 from graintrack_store.core.utils import remove_ellipsis_fields
-from graintrack_store.orders.constants import OrderConstants
 from graintrack_store.orders.models import OrderProduct
 from graintrack_store.users.models import User
 

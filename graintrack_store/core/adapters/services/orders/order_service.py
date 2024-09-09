@@ -48,7 +48,7 @@ class OrderService(BaseService):
         comment: str = "",
     ) -> Order:
         with transaction.atomic():
-            validated_data = self.order_validator.validate_create(
+            validated_data = self.order_validator.validate_create_order(
                 status=OrderConstants.STATUS_CHOICE.RESERVED,
                 order_code=order_code,
                 comment=comment,
@@ -71,7 +71,7 @@ class OrderService(BaseService):
             if not instance:
                 raise NotFound("Order object not found")
 
-            validated_data = self.order_validator.validate_update(
+            validated_data = self.order_validator.validate_update_order(
                 instance=instance, status=status, comment=comment
             )
             order = self.order_repository.update(
@@ -87,7 +87,7 @@ class OrderService(BaseService):
             if not instance:
                 raise NotFound("Order object not found")
 
-            self.order_validator.validate_delete(instance=instance)
+            self.order_validator.validate_delete_order(instance=instance)
 
             # Order will be deleted, so we need to increase available quantity for each product from order
             order_products = (
@@ -116,7 +116,7 @@ class OrderService(BaseService):
             if not deleted:
                 raise ValidationError("Failed to delete order.")
 
-    def list_orders(self, user: User, filters: Dict[str, Any] = None) -> List[Order]:
+    def list(self, user: User, filters: Dict[str, Any] = None) -> List[Order]:
         if user.role == UserConstants.ROLE_CHOICE.MODERATOR:
             orders = self.order_repository.list(filters=filters)
         else:

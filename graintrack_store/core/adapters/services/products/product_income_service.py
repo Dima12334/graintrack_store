@@ -31,9 +31,11 @@ class ProductIncomeService(BaseService):
 
     def create_product_income(self, product_uuid: UUID, quantity: int) -> ProductIncome:
         with transaction.atomic():
-            validated_data = self.product_income_validator.validate_create(
-                product_uuid=product_uuid,
-                quantity=quantity,
+            validated_data = (
+                self.product_income_validator.validate_create_product_income(
+                    product_uuid=product_uuid,
+                    quantity=quantity,
+                )
             )
             product_income = self.product_income_repository.create(
                 **validated_data.dict(exclude_unset=True)

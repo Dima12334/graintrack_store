@@ -42,7 +42,7 @@ class ProductService(BaseService):
         description: str = "",
     ) -> Product:
         with transaction.atomic():
-            validated_data = self.product_validator.validate_create(
+            validated_data = self.product_validator.validate_create_product(
                 category_uuid=category_uuid,
                 name=name,
                 price=price,
@@ -69,7 +69,7 @@ class ProductService(BaseService):
             if not instance:
                 raise NotFound("Product object not found")
 
-            validated_data = self.product_validator.validate_update(
+            validated_data = self.product_validator.validate_update_product(
                 category_uuid=category_uuid,
                 is_deleted=is_deleted,
                 name=name,

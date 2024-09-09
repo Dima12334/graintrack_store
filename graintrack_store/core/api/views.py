@@ -33,7 +33,7 @@ class ProjectListModelMixin(ListModelMixin):
 
     def list(self, request, *args, **kwargs) -> Response:
         filters = request.query_params.copy()
-        instances = self.service.list(filters=filters)
+        instances = self.service.list(filters=filters, user=request.user)
 
         serializer = self.serializer_class(instances, many=True)
         return Response(serializer.data, status=HTTP_200_OK)

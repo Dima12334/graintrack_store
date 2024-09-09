@@ -40,11 +40,13 @@ class ProductDiscountService(BaseService):
         discount_percentage: Decimal,
     ) -> ProductDiscount:
         with transaction.atomic():
-            validated_data = self.product_discount_validator.validate_create(
-                product_uuid=product_uuid,
-                discount_started_at=discount_started_at,
-                discount_ended_at=discount_ended_at,
-                discount_percentage=discount_percentage,
+            validated_data = (
+                self.product_discount_validator.validate_create_product_discount(
+                    product_uuid=product_uuid,
+                    discount_started_at=discount_started_at,
+                    discount_ended_at=discount_ended_at,
+                    discount_percentage=discount_percentage,
+                )
             )
             product_discount = self.product_discount_repository.create(
                 **validated_data.dict(exclude_unset=True)
@@ -66,11 +68,13 @@ class ProductDiscountService(BaseService):
             if not instance:
                 raise NotFound("Product discount object not found")
 
-            validated_data = self.product_discount_validator.validate_update(
-                discount_started_at=discount_started_at,
-                discount_ended_at=discount_ended_at,
-                discount_percentage=discount_percentage,
-                is_active=is_active,
+            validated_data = (
+                self.product_discount_validator.validate_update_product_discount(
+                    discount_started_at=discount_started_at,
+                    discount_ended_at=discount_ended_at,
+                    discount_percentage=discount_percentage,
+                    is_active=is_active,
+                )
             )
             product_discount = self.product_discount_repository.update(
                 instance, **validated_data.dict(exclude_unset=True)

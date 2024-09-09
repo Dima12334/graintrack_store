@@ -32,7 +32,27 @@ class OrderValidator(BaseValidator):
         self.order_repository = order_repository
         self.order_product_repository = order_product_repository
 
-    def validate_create(
+    def validate_order_already_exists(self, order_code: str) -> None:
+        order_already_exists = self.order_repository.check_existence_by_order_code(
+            order_code=order_code
+        )
+        if order_already_exists:
+            raise ValidationError(
+                f"Order with such order code {order_code} already exists."
+            )
+
+    def validate_change_order_status_to_sold(
+        self, order: Order, new_status: str
+    ) -> None:
+        order_products = self.order_product_repository.get_order_products_by_order_uuid(
+            order_uuid=order.uuid
+        )
+        if not order_products:
+            raise ValidationError(
+                f"You cannot change order status to {new_status} without specified products in order."
+            )
+
+    def validate_create_order(
         self,
         status: str,
         order_code: str,
@@ -49,17 +69,11 @@ class OrderValidator(BaseValidator):
             errors = self.parse_pydantic_validation_error(ex)
             raise ValidationError(errors)
 
-        order_already_exists = self.order_repository.check_existence_by_order_code(
-            order_code=schema.order_code
-        )
-        if order_already_exists:
-            raise ValidationError(
-                f"Order with such order code {schema.order_code} already exists."
-            )
+        self.validate_order_already_exists(order_code=schema.order_code)
 
         return schema
 
-    def validate_update(
+    def validate_update_order(
         self,
         instance: Order,
         status: str | EllipsisType = ...,
@@ -77,20 +91,14 @@ class OrderValidator(BaseValidator):
             raise ValidationError(errors)
 
         if schema.status and schema.status == OrderConstants.STATUS_CHOICE.SOLD:
-            order_products = (
-                self.order_product_repository.get_order_products_by_order_uuid(
-                    order_uuid=instance.uuid
-                )
+            self.validate_change_order_status_to_sold(
+                order=instance, new_status=schema.status
             )
-            if not order_products:
-                raise ValidationError(
-                    f"You cannot change order status to {schema.status} without specified products in order."
-                )
             schema.sold_at = timezone.now()
 
         return schema
 
-    def validate_delete(self, instance: Order) -> None:
+    def validate_delete_order(self, instance: Order) -> None:
         sold_order_status = OrderConstants.STATUS_CHOICE.SOLD
         if instance.status == sold_order_status:
             raise ValidationError(
